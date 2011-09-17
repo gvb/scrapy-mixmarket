@@ -6,13 +6,12 @@
 from scrapy.item import Item, Field
 
 class MixmarketItem(Item):
-    details_link = Field()	# company details page on mixmarket
     country = Field()
-    institution = Field()
-    date = Field()		# of what? update?
-    rating = Field()		# "diamonds"
-    portfolio = Field()		# Gross loan portfolio
-    borrowers = Field()		# Number of active borrowers
+    co_name = Field()
+    co_date_inc = Field()	# Date of incorporation
+    co_rating = Field()		# "diamonds"
+    co_portfolio = Field()	# Gross loan portfolio
+    co_borrowers = Field()	# Number of active borrowers
 #    deposits = Field();
 #    num_depositors = Field();
 #    total_assets = Field();
