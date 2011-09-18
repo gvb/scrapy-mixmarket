@@ -10,12 +10,21 @@ class MixmarketItem(Item):
     co_name = Field()
     co_date_inc = Field()	# Date of incorporation
     co_rating = Field()		# "diamonds"
-    co_portfolio = Field()	# Gross loan portfolio
-    co_portfolio_meta = Field()	# Portfolio metadata (e.g. "USD, 2009")
-    co_borrowers = Field()	# Number of active borrowers
-#    deposits = Field();
-#    num_depositors = Field();
-#    total_assets = Field();
+    # Gross loan portfolio, metadata (e.g. "USD, 2009")
+    co_portfolio = Field()
+    co_portfolio_meta = Field()
+    # Assets
+    co_assets = Field()
+    co_assets_meta = Field()
+    # Deposits
+    co_deposits = Field()
+    co_deposits_meta = Field()
+    # Number of active borrowers
+    co_borrowers = Field()
+    co_borrowers_meta = Field()
+    # Number of depositors
+    co_depositors = Field()
+    co_depositors_meta = Field()
 #    mission = Field();
 #    address = Field();		# Multi-line represented as an array
 #    phone = Field();

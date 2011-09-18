@@ -11,6 +11,25 @@ class MixMarketSpider(BaseSpider):
         "http://mixmarket.org/mfi/country/Afghanistan",
     ]
 
+    def extract_sum(self, piece):
+        """ views-field-sum parsing
+        These have a numeric part, an order part, and a meta part
+        """
+        # Numeric part, e.g "3.1".  We also need to strip the commas ","
+        # out of the number before converting it to a float.
+        tmp = piece.select('span/span[@class="numeric"]/text()').extract()[0]
+        num = float(tmp.replace(",", ""))
+
+        # Order part, e.g. "thousand" or "million"
+        tmp = piece.select('span/span/span[@class="order"]/text()').extract()
+        if tmp != []:
+            if tmp[0] == u'thousand':
+                num = num * 1000.0
+            if tmp[0] == u'million':
+                num = num * 1000000.0
+        meta = piece.select('label/span[@class="meta"]/text()').extract()[0]
+        return num, meta
+
     def parse(self, response):
         hxs = HtmlXPathSelector(response)
 
@@ -42,23 +61,29 @@ class MixMarketSpider(BaseSpider):
                 item['co_rating'] = int(co_rating[0])
                 break
 
-        # Portfolio has several pieces
-        tmp = hxs.select('//div[@class="views-field-sum"]')
-        # Numeric part, e.g "3.1".  We also need to strip the commas ","
-        # out of the number before converting it to a float.
-        co_po_str = tmp.select('span/span[@class="numeric"]/text()').extract()[0]
-        co_portfolio = float(co_po_str.replace(",", ""))
-
-        # Order part, e.g. "million"
-        scale = tmp.select('span/span/span[@class="order"]/text()').extract()
-        if scale != []:
-            if scale[0] == u'thousand':
-                co_portfolio = co_portfolio * 1000.0
-            if scale[0] == u'million':
-                co_portfolio = co_portfolio * 1000000.0
+        # Portfolio (loans)
+        co_portfolio, co_portfolio_meta = self.extract_sum(hxs.select('//div[@class="views-field-sum"]'))
         item['co_portfolio'] = co_portfolio
+        item['co_portfolio_meta'] = co_portfolio_meta
 
-        # Meta part, e.g. "USD, date"
-        item['co_portfolio_meta'] = tmp.select('label/span[@class="meta"]/text()').extract()[0]
+        # Assets
+        co_assets, co_assets_meta = self.extract_sum(hxs.select('//div[@class="views-field-sum-3"]'))
+        item['co_assets'] = co_assets
+        item['co_assets_meta'] = co_assets_meta
+
+        # Deposits
+        co_deposits, co_deposits_meta = self.extract_sum(hxs.select('//div[@class="views-field-sum-2"]'))
+        item['co_deposits'] = co_deposits
+        item['co_deposits_meta'] = co_deposits_meta
+
+        # Number of active borrowers
+        co_borrowers, co_borrowers_meta = self.extract_sum(hxs.select('//div[@class="views-field-sum-1"]'))
+        item['co_borrowers'] = co_borrowers
+        item['co_borrowers_meta'] = co_borrowers_meta
+
+        # Number of depositors
+        co_depositors, co_depositors_meta = self.extract_sum(hxs.select('//div[@class="views-field-sum-4"]'))
+        item['co_depositors'] = co_depositors
+        item['co_depositors_meta'] = co_depositors_meta
 
         return item
