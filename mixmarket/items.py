@@ -11,6 +11,7 @@ class MixmarketItem(Item):
     co_date_inc = Field()	# Date of incorporation
     co_rating = Field()		# "diamonds"
     co_portfolio = Field()	# Gross loan portfolio
+    co_portfolio_meta = Field()	# Portfolio metadata (e.g. "USD, 2009")
     co_borrowers = Field()	# Number of active borrowers
 #    deposits = Field();
 #    num_depositors = Field();
