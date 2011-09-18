@@ -25,7 +25,14 @@ class MixmarketItem(Item):
     # Number of depositors
     co_depositors = Field()
     co_depositors_meta = Field()
-#    mission = Field();
+
+    co_address1 = Field();
+    co_address2 = Field();
+    co_address3 = Field();
+    co_address4 = Field();
+    co_address5 = Field();
+    co_address6 = Field();
+
 #    address = Field();		# Multi-line represented as an array
 #    phone = Field();
 #    email = Field();

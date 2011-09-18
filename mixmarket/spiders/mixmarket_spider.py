@@ -86,4 +86,11 @@ class MixMarketSpider(BaseSpider):
         item['co_depositors'] = co_depositors
         item['co_depositors_meta'] = co_depositors_meta
 
+        # Address (multiline)
+        addr_lines = hxs.select('//div[@class="address-line"]')
+        for lbl, addr in zip(['co_address1', 'co_address2', 'co_address3', 'co_address4', 'co_address5', 'co_address6'], addr_lines):
+            tmp = addr.select('text()').extract()
+            if tmp != []:
+                item[lbl] = tmp[0]
+
         return item
