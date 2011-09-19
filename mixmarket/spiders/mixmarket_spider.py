@@ -9,6 +9,7 @@ class MixMarketSpider(BaseSpider):
     allowed_domains = ["mixmarket.org"]
     start_urls = [
         "http://mixmarket.org/mfi/country/Afghanistan",
+#        "http://mixmarket.org/mfi/country/Brazil"
     ]
 
     def extract_sum(self, piece):
@@ -17,8 +18,11 @@ class MixMarketSpider(BaseSpider):
         """
         # Numeric part, e.g "3.1".  We also need to strip the commas ","
         # out of the number before converting it to a float.
-        tmp = piece.select('span/span[@class="numeric"]/text()').extract()[0]
-        num = float(tmp.replace(",", ""))
+        tmp = piece.select('span/span[@class="numeric"]/text()').extract()
+        if tmp != []:
+            num = float(tmp[0].replace(",", ""))
+        else:
+            num = 0
 
         # Order part, e.g. "thousand" or "million"
         tmp = piece.select('span/span/span[@class="order"]/text()').extract()
@@ -27,7 +31,11 @@ class MixMarketSpider(BaseSpider):
                 num = num * 1000.0
             if tmp[0] == u'million':
                 num = num * 1000000.0
-        meta = piece.select('label/span[@class="meta"]/text()').extract()[0]
+        tmp = piece.select('label/span[@class="meta"]/text()').extract()
+        if tmp != []:
+            meta = tmp[0]
+        else:
+            meta = ''
         return num, meta
 
     def parse(self, response):
