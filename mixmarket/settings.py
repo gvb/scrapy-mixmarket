@@ -24,7 +24,8 @@ FEED_EXPORTERS = {
 
 # By specifying the fields to export, the CSV export honors the order
 # rather than using a random order.
-EXPORT_FIELDS = ['country',
+EXPORT_FIELDS = [
+    'country',
     'co_name',
     'co_date_inc',
     'co_rating',
@@ -50,5 +51,17 @@ EXPORT_FIELDS = ['country',
     'co_address4',
     'co_address5',
     'co_address6',
+    'co_phone',
+    'co_email',
+    'co_website',
+#    fundingsrc',
+#    products_svcs',
+#    looking_for',
+    'co_percent_ops_mf_min',
+    'co_percent_ops_mf_max',
+    'co_established',
+    'co_fye',
+    'co_legal_status',
+    'co_regulated',
 ]
 

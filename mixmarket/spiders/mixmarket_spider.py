@@ -101,4 +101,54 @@ class MixMarketSpider(BaseSpider):
             if tmp != []:
                 item[lbl] = tmp[0]
 
+        # Phone
+        tmp = hxs.select('//div[@class="field field-type-text field-field-mfi-phone"]/div/div/text()').extract()
+        if tmp != []:
+            item['co_phone'] = tmp[0]
+
+        # email
+        tmp = hxs.select('//div[@class="field field-type-text field-field-mfi-email"]/div/div/span').extract()
+        if tmp != []:
+            # Extract and undo anti-spam obfuscation
+            tmp = hxs.select('//div[@class="field field-type-text field-field-mfi-email"]/div/div/span/span[@class="u"]/text()').extract()
+            tmp_u = tmp[0].replace(" [dot] ", ".")
+            tmp = hxs.select('//div[@class="field field-type-text field-field-mfi-email"]/div/div/span/span[@class="d"]/text()').extract()
+            tmp_d = tmp[0].replace(" [dot] ", ".")
+            item['co_email'] = tmp_u + "@" + tmp_d
+
+        # Web site
+        tmp = hxs.select('//div[@class="field field-type-text field-field-mfi-website"]/div/div/a/@href').extract()
+        if tmp != []:
+            item['co_website'] = tmp[0]
+
+        # Percentage of operations comprised of MF
+        tmp = hxs.select('//div[@class="field field-type-text field-field-mfi-mf-operation"]/div/div/text()').extract()
+        if tmp != []:
+            # Split it if it is a range, otherwise min and max are the same
+            if '-' in tmp[0]:
+                item['co_percent_ops_mf_min'], item['co_percent_ops_mf_max'] = tmp[0].split( "-")
+            else:
+                item['co_percent_ops_mf_min'] = tmp[0]
+                item['co_percent_ops_mf_max'] = tmp[0]
+
+        # Date established
+        tmp = hxs.select('//div[@class="field field-type-date field-field-mfi-date"]/div/div/span/text()').extract()
+        if tmp != []:
+            item['co_established'] = tmp[0]
+
+        # Fiscal year end
+        tmp = hxs.select('//div[@class="field field-type-text field-field-mfi-fye"]/div[@class="field-items"]/div/text()').extract()
+        if tmp != []:
+            item['co_fye'] = tmp[0]
+
+        # Legal status
+        tmp = hxs.select('//div[@class="field field-type-text field-field-mfi-legal-status"]/div/div/text()').extract()
+        if tmp != []:
+            item['co_legal_status'] = tmp[0]
+
+        # Regulated?
+        tmp = hxs.select('//div[@class="field field-type-text field-field-mfi-is-regulated"]/div/div/text()').extract()
+        if tmp != []:
+            item['co_regulated'] = tmp[0]
+
         return item
