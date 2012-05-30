@@ -9,7 +9,7 @@ class MixMarketSpider(BaseSpider):
     allowed_domains = ["mixmarket.org"]
     start_urls = [
         "http://mixmarket.org/mfi/country/Afghanistan",
-#        "http://mixmarket.org/mfi/country/Brazil"
+        "http://mixmarket.org/mfi/country/Brazil",
     ]
 
     def extract_sum(self, piece):
@@ -60,7 +60,8 @@ class MixMarketSpider(BaseSpider):
         item['country'] = co_name[1]
 
         co_date_inc = hxs.select('//div[@class="field field-type-date field-field-mfi-date"]/div/div/span/text()').extract()
-        item['co_date_inc'] = co_date_inc[0]
+        if co_date_inc != []:
+        	item['co_date_inc'] = co_date_inc[0]
 
         co_rating = []
         for diamonds in range(5):
