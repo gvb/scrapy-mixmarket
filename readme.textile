@@ -1,0 +1,33 @@
+This is a python program that uses scrapy (I am running version 0.12 under Ubuntu 11.04) to scrape the mixmarket web site.  It is pretty rudimentary, but functional.
+
+The mixmarket.csv is an example output of Afghanistan and Brazil (hey, they were the first to countries).
+
+To run:
+   scrapy crawl -L WARNING mixmarket
+
+Scrapy documentation:
+* <http://doc.scrapy.org/en/latest/>
+* <http://doc.scrapy.org/en/latest/intro/tutorial.html>
+
+Notes:
+* This doesn't fully crawl the web site, it starts with the country page(s).  The example configuration crawls Afghanistan and Brazil.  See the variable "start_urls" in
+   mixmarket/spiders/mixmarket_spider.py
+* The fields are extracted in the spider code:
+   mixmarket/spiders/mixmarket_spider.py
+* This is not extracting all of the available fields.  Fields can be added by looking at example page source (^U in your web browser), finding the fields of interest, and then figuring out how to extract the desired information from the fields using XPath matching.  The "scrapy shell <URL>" technique from the tutorial is very helpful for hacking together a XPath match quickly.
+
+Example:
+   scrapy shell http://mixmarket.org/mfi/afs
+
+Then at the interactive prompt:
+<pre>
+hxs.select('//div[@class="field field-type-text field-field-mfi-is-regulated"]/div/div/text()').extract()
+Out[105]: [u'\n                    no        ']
+</pre>
+* This was written on linux.  It should work OK on Windows too by installing python and the libraries, but I'm Windows Free ^tm^.  On Ubuntu, it is "apt-get install python-scrapy" and *boom* it is functional.  Gotta love it.
+* If you add CSV fields, remember to add them to "mixmarket/settings.py".  If you want the fields to come out in a different order, reorder them there.
+* Improving the source should be easy: it is just XPath matching techniques plus simple python.
+* The scraping should be pretty robust.  If the mixmarket guys redo their site, you will have to find and fix the XPath matches for the items, but that is not going to change much/often.
+
+Good luck,
+gvb 
